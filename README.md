@@ -1,6 +1,8 @@
 # 让 aliddns 支持 ipv6
 
-用这里的`aliddns_update.sh`替换`/koolshare/scripts/aliddns_update.sh`
+用这里的`aliddns_update.sh`替换路由器`/koolshare/scripts/`目录下的`aliddns_update.sh`
+
+## 操作步骤
 
 ssh进路由器，执行以下代码：
 ```zsh
