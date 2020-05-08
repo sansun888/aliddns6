@@ -14,3 +14,12 @@ chmod +x aliddns_update.sh
 
 **注意**：原版脚本可能将`Access Key
 Secret`末尾加了`&`，在路由器界面手动删除，提交。
+
+## 补充
+
+- [电信获取ipv6](https://m.ithome.com/html/405571.htm)
+- aliddns 网页端*获取 IP*：
+```
+curl -s --interface ppp0 ipv6.icanhazip.com
+```
+
