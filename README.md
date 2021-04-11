@@ -20,6 +20,6 @@ Secret`末尾加了`&`，在路由器界面手动删除，提交。
 - [电信获取ipv6](https://m.ithome.com/html/405571.htm)
 - aliddns 网页端*获取 IP*：
 ```
-curl -s --interface ppp0 ipv6.icanhazip.com
+curl -s v6.ident.me
 ```
-
+此行代码可以现在电脑上测试一下，能获取到IPV6地址就行。不行就试试[其他的地址](https://blog.csdn.net/longzhizhui926/article/details/83002685)
