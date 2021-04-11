@@ -1,5 +1,9 @@
 # 让 aliddns 支持 ipv6
 
+我的固件是梅林改384.14，这是我的aliddns界面:
+
+[setting](./images/setting.png)
+
 用这里的`aliddns_update.sh`替换路由器`/koolshare/scripts/`目录下的`aliddns_update.sh`
 
 ## 操作步骤
