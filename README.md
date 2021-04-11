@@ -6,7 +6,7 @@
 
 ![test-ipv6](./images/test-ipv6.png)
 
-如果没接入 IPv6 网络，参考[电信获取ipv6][]。
+如果没接入 IPv6 网络，参考[电信获取ipv6](https://m.ithome.com/html/405571.htm)。
 
 ## 2. 准备域名
 
@@ -57,5 +57,9 @@ curl -s v6.ident.me
 
 提交。
 
+## 5. 其他
+
 [检查域名解析情况](https://zijian.aliyun.com/)。
+
+[阿里云云解析 DNS API 文档](https://help.aliyun.com/document_detail/29740.html)。
 
