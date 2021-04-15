@@ -1,5 +1,7 @@
 # 让 Aliddns 支持 IPv6
 
+此处的离线包是在 [aliddns](https://github.com/kyriosli/koolshare-aliddns) （作者：[kyrios](https://koolshare.cn/space-uid-39292.html) ，[插件介绍](https://koolshare.cn/thread-64703-1-1.html)）基础上修改的，仅支持 IPv6。
+
 ## 1. 测试是否已接入 IPv6 网络
 
 [IPv6 测试](http://www.test-ipv6.com/)，成功接入 IPv6 网络显示如下：
@@ -24,36 +26,19 @@
 
 ![dnsfullaccess](./images/dnsfullaccess.png)
 
-## 3. 更换 Aliddns 中的脚本
+## 3. 离线安装 Aliddns6
 
-用这里的`aliddns_update.sh`替换路由器`/koolshare/scripts/`目录下的`aliddns_update.sh`。
-
-ssh进路由器，执行以下代码：
-```zsh
-cd /koolshare/script/
-mv aliddns_update.sh aliddns_update.bak
-wget https://gitee.com/tyasky/aliddns6/blob/master/aliddns_update.sh
-chmod +x aliddns_update.sh
-```
+下载此处的离线安装包 [aliddns6.tar.gz](https://gitee.com/tyasky/aliddns6/blob/master/aliddns6.tar.gz)，到路由器软件中心离线安装。
 
 ## 4. Aliddns 设置面板
 
-我的固件是梅林改384.14，这是我的 Aliddns 设置界面:
+我的固件是梅林改 RT-AC86U_384.14，这是我的 Aliddns 设置界面:
 
 ![setting](./images/setting.png)
 
-域名：任意英文名字，域名
+域名：第一空填任意英文名字，第二空填域名
 
-DNS服务器：dns9.hichina.com 或者 dns10.hichina.com
-
-获得 IP 命令：
-
-```
-curl -s v6.ident.me
-```
-此行代码可以先在电脑上测试一下，能获取到IPV6地址就行。不行就试试[其他的地址](https://blog.csdn.net/longzhizhui926/article/details/83002685)。
-
-![command-test](./images/command-test.png)
+DNS 服务器和获取IP命令不用填。
 
 提交。
 

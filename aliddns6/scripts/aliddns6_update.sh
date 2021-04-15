@@ -1,10 +1,10 @@
 #!/bin/sh
 
 source /koolshare/scripts/base.sh
-eval `dbus export aliddns_`
+eval `dbus export aliddns6_`
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】'
 https_lanport=`nvram get https_lanport`
-if [ "$aliddns_enable" != "1" ]; then
+if [ "$aliddns6_enable" != "1" ]; then
 	nvram set ddns_hostname_x=`nvram get ddns_hostname_old`
 	echo "not enable"
 	exit
@@ -14,24 +14,25 @@ now=`echo_date`
 
 die () {
 	echo $1
-	dbus set aliddns_last_act="$now: failed($1)"
+	dbus set aliddns6_last_act="$now: failed($1)"
 }
 
-[ "$aliddns_curl" = "" ] && aliddns_curl="curl -s --interface ppp0 whatismyip.akamai.com"
-[ "$aliddns_dns" = "" ] && aliddns_dns="223.5.5.5"
-[ "$aliddns_ttl" = "" ] && aliddns_ttl="600"
+# [ "$aliddns6_curl" = "" ] && aliddns6_curl="ip -6 address | grep dynamic | awk '{print $2}' | awk -F '/' '{print $1}'"
+[ "$aliddns6_dns" = "" ] && aliddns6_dns="223.5.5.5"
+[ "$aliddns6_ttl" = "" ] && aliddns6_ttl="600"
 
 # 本地 ip
-ip=`$aliddns_curl 2>&1` || die "$ip"
+# ip=`$aliddns6_curl 2>&1` || die "$ip"
 
+ip=`ip -6 address | grep dynamic | awk '{print $2}' | awk -F '/' '{print $1}' 2>&1` || die "$ip"
 # 记录类型 type，根据 curl 到的 ip 设定 type
 [ `echo $ip |grep -oE '[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}\.[0-9]{0,3}' |wc -l` -ne 0 ] && type="A" || type="AAAA"
 
 #support @ record nslookup
-if [ "$aliddns_name" = "@" ];then
-	current_ip=`nslookup $aliddns_domain $aliddns_dns 2>&1`
+if [ "$aliddns6_name" = "@" ];then
+	current_ip=`nslookup $aliddns6_domain $aliddns6_dns 2>&1`
 else
-	current_ip=`nslookup $aliddns_name.$aliddns_domain $aliddns_dns 2>&1`
+	current_ip=`nslookup $aliddns6_name.$aliddns6_domain $aliddns6_dns 2>&1`
 fi
 
 if [ "$type" = "A" ];then
@@ -44,11 +45,11 @@ if [ "$?" -eq "0" ];then
 	if [ "$ip" = "$current_ip" ]
 	then
 		echo "skipping"
-		dbus set aliddns_last_act="$now: skipped($ip)"
+		dbus set aliddns6_last_act="$now: skipped($ip)"
 		nvram set ddns_enable_x=1
 		#web ui show without @.
-		if [ "$aliddns_name" = "@" ] ;then
-			nvram set ddns_hostname_x="$aliddns_domain"
+		if [ "$aliddns6_name" = "@" ] ;then
+			nvram set ddns_hostname_x="$aliddns6_domain"
 		else
 			ddns_custom_updated 1
 			exit 0
@@ -56,17 +57,17 @@ if [ "$?" -eq "0" ];then
 	fi 
 else
 	# fix when A record removed by manual dns is always update error
-	unset aliddns_record_id
+	unset aliddns6_record_id
 fi
 
 
 ############################### 外部引入代码 start ##################################
 ##配置
 
-host="$aliddns_name"      # 主机名
-domain="$aliddns_domain"  # 域名
-ak="$aliddns_ak"          # 阿里云AccessKey ID
-sk="$aliddns_sk&"         # 阿里云Access Key Secret  后面多个 &
+host="$aliddns6_name"      # 主机名
+domain="$aliddns6_domain"  # 域名
+ak="$aliddns6_ak"          # 阿里云AccessKey ID
+sk="$aliddns6_sk&"         # 阿里云Access Key Secret  后面多个 &
 type="$type"
 timestamp=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
 
@@ -189,22 +190,22 @@ alidns $host $domain $ip
 
 ####### save to file start ########
 
-aliddns_record_id="$record_id"
-if [ -z "$aliddns_record_id" ]; then
+aliddns6_record_id="$record_id"
+if [ -z "$aliddns6_record_id" ]; then
 	# failed
-	dbus set aliddns_last_act="$now: failed"
+	dbus set aliddns6_last_act="$now: failed"
 	nvram set ddns_hostname_x=`nvram get ddns_hostname_old`
 else
-	dbus set aliddns_record_id="$aliddns_record_id"
-	dbus set aliddns_last_act="$now: success($ip)"
+	dbus set aliddns6_record_id="$aliddns6_record_id"
+	dbus set aliddns6_last_act="$now: success($ip)"
 	nvram set ddns_enable_x=1
 	#web ui show without @.
-	if [ "$aliddns_name" = "@" ] ;then
-	 	nvram set ddns_hostname_x="$aliddns_domain"
+	if [ "$aliddns6_name" = "@" ] ;then
+	 	nvram set ddns_hostname_x="$aliddns6_domain"
 		nvram set ddns_updated="1"
 		nvram commit
 	else
-	 	nvram set ddns_hostname_x="$aliddns_name"."$aliddns_domain"
+	 	nvram set ddns_hostname_x="$aliddns6_name"."$aliddns6_domain"
 		nvram set ddns_updated="1"
 		nvram commit
 	fi
