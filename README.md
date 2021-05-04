@@ -48,3 +48,8 @@ DNS 服务器和获取IP命令不用填。
 
 [阿里云云解析 DNS API 文档](https://help.aliyun.com/document_detail/29740.html)。
 
+## a. 解析本机的单独脚本
+
+添加了一个原创脚本：**local2Alidns.sh**，解析本机到阿里云 DNS，修改脚本开始的公共参数后，让脚本开机启动就可以了。
+此脚本已在 Linux 电脑、路由器、手机上测试过了。
+
