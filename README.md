@@ -1,10 +1,6 @@
-# 让 Aliddns 支持 IPv6
+# 支持 IPv6 的 aliddns.sh
 
-此处的离线包是在 [aliddns](https://github.com/kyriosli/koolshare-aliddns) （作者：[kyrios](https://koolshare.cn/space-uid-39292.html) ，[插件介绍](https://koolshare.cn/thread-64703-1-1.html)）基础上修改的，仅支持 IPv6。
-
-我的路由器是 AC86U，固件是梅林改，其他型号路由器使用此处的离线包可能不兼容。
-
-**本文最后有我自己写的可单独运行的脚本，自己测试通过，推荐试用。**
+为了兼容，只留下一个可独立运行的脚本 aliddns.sh。此脚本已在 Manjaro、RT-AC86U、Termux 中测试过了。
 
 ## 1. 测试是否已接入 IPv6 网络
 
@@ -30,53 +26,44 @@
 
 ![dnsfullaccess](./images/dnsfullaccess.png)
 
-## 3. 离线安装 Aliddns6
+## 3. 添加解析脚本
 
-下载此处的离线安装包 [aliddns6.tar.gz](https://gitee.com/tyasky/aliddns6/blob/master/aliddns6.tar.gz)，到路由器软件中心离线安装。
+下载本仓库中的脚本 aliddns.sh。
 
-## 4. Aliddns 设置面板
+下面的步骤在 Windows 下可以用 [WinSCP](https://winscp.net/) 完成。
 
-我的固件是梅林改 RT-AC86U_384.14，这是我的 Aliddns 设置界面:
+1. 修改脚本开始的以下参数
 
-![setting](./images/setting.png)
+    ```bash
+    ak="Access Key ID"
+    sk="Access Key Secret"
+    host="test"
+    domain="example.com"
+    rungap=300                # 更新解析记录的间隔时间，秒数
+    ```
 
-域名：第一空填任意英文名字，第二空填域名
+2. 将本脚本放到 `/jffs/`目录下
 
-DNS 服务器和获取IP命令不用填。
+    ```bash
+    scp -P8022 ./aliddns.sh RouterLoginName@192.168.50.1:/jffs/
+    ```
 
-提交。
+3. 添加执行权限
 
-## 5. 其他
+    ```bash
+    chmod a+x /jffs/aliddns.sh
+    ```
+
+4. 在 `/jffs/scripts/wan-start`末尾添加一行
+
+    ```bash
+    source /jffs/aliddns.sh
+    ```
+
+5. 重启路由器。
+
+## 4. 其他
 
 [检查域名解析情况](https://zijian.aliyun.com/)。
 
 [阿里云云解析 DNS API 文档](https://help.aliyun.com/document_detail/29740.html)。
-
-## a. 解析本机的单独脚本
-
-添加了一个原创脚本：**local2Alidns.sh**，解析本机到阿里云 DNS。
-此脚本已在 Linux 电脑、路由器、手机上测试过了。
-
-1. 修改脚本开始的以下参数：
-
-```
-ak="Access Key ID"
-sk="Access Key Secret"
-host="test"
-domain="example.com"
-rungap=300                # 更新解析记录的间隔时间，秒数
-```
-
-2. 将本脚本放到 `/jffs/`目录下:
-
-```bash
-scp -P8022 ./local2Alidns.sh RouterLoginName@192.168.50.1:/jffs/
-```
-
-3. 在 `/jffs/scripts/wan-start`末尾添加一行：
-
-```
-source /jffs/local2Alidns.sh
-```
-
-4. 重启路由器。
