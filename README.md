@@ -2,6 +2,10 @@
 
 此处的离线包是在 [aliddns](https://github.com/kyriosli/koolshare-aliddns) （作者：[kyrios](https://koolshare.cn/space-uid-39292.html) ，[插件介绍](https://koolshare.cn/thread-64703-1-1.html)）基础上修改的，仅支持 IPv6。
 
+我的路由器是 AC86U，固件是梅林改，其他型号路由器使用此处的离线包可能不兼容。
+
+**本文最后有我自己写的可单独运行的脚本，自己测试通过，推荐试用。**
+
 ## 1. 测试是否已接入 IPv6 网络
 
 [IPv6 测试](http://www.test-ipv6.com/)，成功接入 IPv6 网络显示如下：
@@ -50,6 +54,29 @@ DNS 服务器和获取IP命令不用填。
 
 ## a. 解析本机的单独脚本
 
-添加了一个原创脚本：**local2Alidns.sh**，解析本机到阿里云 DNS，修改脚本开始的公共参数后，让脚本开机启动就可以了。
+添加了一个原创脚本：**local2Alidns.sh**，解析本机到阿里云 DNS。
 此脚本已在 Linux 电脑、路由器、手机上测试过了。
 
+1. 修改脚本开始的以下参数：
+
+```
+ak="Access Key ID"
+sk="Access Key Secret"
+host="test"
+domain="example.com"
+rungap=300                # 更新解析记录的间隔时间，秒数
+```
+
+2. 将本脚本放到 `/jffs/`目录下:
+
+```bash
+scp -P8022 ./local2Alidns.sh RouterLoginName@192.168.50.1:/jffs/
+```
+
+3. 在 `/jffs/scripts/wan-start`末尾添加一行：
+
+```
+source /jffs/local2Alidns.sh
+```
+
+4. 重启路由器。

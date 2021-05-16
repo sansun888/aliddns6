@@ -1,10 +1,13 @@
 #!env bash
 
 # Author: tyasky
+
 ak="Access Key ID"
 sk="Access Key Secret"
 host="test"
 domain="example.com"
+rungap=300
+
 dns="dns9.hichina.com"
 type=AAAA
 
@@ -70,7 +73,7 @@ do
 
     if [ -z "$downipv6" ]; then
         echo "未获取到本机本机 IPv6 地址"
-        sleep 60
+        sleep $rungap
         continue
     fi
 
@@ -83,5 +86,5 @@ do
         echo "添加解析记录..."
         add_record
     fi
-    sleep 60
+    sleep $rungap
 done
