@@ -6,10 +6,14 @@ ak="Access Key ID"
 sk="Access Key Secret"
 host="test"
 domain="example.com"
-rungap=300
+rungap=300             # 更新间隔秒数
 
 dns="dns9.hichina.com"
-type=AAAA
+type=AAAA              # 解析记录类型
+downvalue=""           # 解析值，留空则动态获取
+get_downvalue() {
+    ip -6 address | grep dynamic | tail -1 | awk '{print $2}' | awk -F '/' '{print $1}'
+}
 
 
 # 第二个参数指定额外不编码的字符
@@ -45,15 +49,19 @@ send_request() {
 }
 
 query_recordid() {
-    send_request "Action=DescribeSubDomainRecords&SubDomain=$host.$domain" | sed 's/"//g;s/,/\n/g' | grep RecordId | awk -F: '{ print $2 }'
+    send_request "Action=DescribeSubDomainRecords&SubDomain=$host.$domain" | sed 's/":/：/g;s/"//g;s/,/\n/g' | grep RecordId | awk -F： '{ print $2 }'
+}
+
+query_value() {
+    send_request "Action=DescribeSubDomainRecords&SubDomain=$host.$domain" | sed 's/":/：/g;s/"//g;s/,/\n/g' | grep Value | awk -F： '{ print $2 }'
 }
 
 update_record() {
-    send_request "Action=UpdateDomainRecord&RR=$host&RecordId=$(query_recordid)&Type=$type&Value=$downipv6"
+    send_request "Action=UpdateDomainRecord&RR=$host&RecordId=$(query_recordid)&Type=$type&Value=$downvalue"
 }
 
 add_record() {
-    send_request "Action=AddDomainRecord&DomainName=$domain&RR=$host&Type=$type&Value=$downipv6"
+    send_request "Action=AddDomainRecord&DomainName=$domain&RR=$host&Type=$type&Value=$downvalue"
 }
 
 delete_record() {
@@ -65,21 +73,21 @@ do
     datetime=$(date +%Y-%m-%d\ %T)
     echo 当前时间：$datetime
 
-    upipv6=`nslookup $host.$domain $dns | grep -E "([0-9a-f]+:){7}" | awk '{print $NF}'`
-    echo 域名指向：$upipv6
+    upvalue=`query_value`
+    echo 域名指向：$upvalue
 
-    downipv6=`ip -6 address | grep dynamic | tail -1 | awk '{print $2}' | awk -F '/' '{print $1}'`
-    echo 本机IPv6：$downipv6
+    downvalue=${downvalue:=`get_downvalue`}
+    echo 本机地址：$downvalue
 
-    if [ -z "$downipv6" ]; then
-        echo "未获取到本机本机 IPv6 地址"
+    if [ -z "$downvalue" ]; then
+        echo "未获取到本机地址"
         sleep $rungap
         continue
     fi
 
-    if [ "$upipv6" = "$downipv6" ]; then
+    if [ "$upvalue" = "$downvalue" ]; then
         echo "已正确解析，无需更新。"
-    elif [ -n "$(query_recordid)" ]; then
+    elif [ -n "$upvalue" ]; then
         echo "更新解析记录..."
         update_record
     else
