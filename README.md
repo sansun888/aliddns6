@@ -26,11 +26,11 @@
 
 ![dnsfullaccess](./images/dnsfullaccess.png)
 
-## 3. 添加解析脚本
+## 3. 路由器中自动运行
 
-下载本仓库中的脚本 aliddns.sh。
+下载本仓库中的脚本 [aliddns.sh](https://gitee.com/tyasky/aliddns6/releases)。
 
-下面的步骤在 Windows 下可以用 [WinSCP](https://winscp.net/) 完成。
+下面的步骤在 Windows 下可以用 [Notepad++](https://notepad-plus-plus.org/downloads/) 和 [WinSCP](https://winscp.net/) 完成。
 
 1. 修改脚本开始的以下参数
 
@@ -62,7 +62,34 @@
 
 5. 重启路由器。
 
-## 4. 其他
+## 4. Windows7 下运行
+
+1. 下载安装 [Git](https://git-scm.com/download/win)，有 32 位和 64 位的。
+
+2. 下载本仓库中的脚本 [aliddns.sh](https://gitee.com/tyasky/aliddns6/releases)。
+
+3. 用 [Notepad++](https://notepad-plus-plus.org/downloads/) 修改脚本开始的以下参数
+
+    ```
+    ak="Access Key ID"
+    sk="Access Key Secret"
+    host="test"
+    domain="example.com"
+    rungap=300             # 更新间隔秒数
+    
+    dns="dns9.hichina.com"
+    type=AAAA              # 解析记录类型
+    downvalue=""           # 解析值，留空则动态获取
+    get_downvalue() {
+        # ip -6 address | grep dynamic | tail -1 | awk '{print $2}' | awk -F '/' '{print $1}'
+        # Windows7 中获取本机 IPv6 地址
+        ipconfig|iconv -f gbk -t UTF-8|grep '临时 IPv6'|awk '{print $NF}'
+    }
+    ```
+
+4. 双击运行
+
+## 5. 其他
 
 [检查域名解析情况](https://zijian.aliyun.com/)。
 
