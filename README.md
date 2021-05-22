@@ -64,13 +64,13 @@
 
 ## 4. Windows7 下运行
 
-1. 下载安装 [Git](https://git-scm.com/download/win)，有 32 位和 64 位的。
+1. 下载安装 [Git](https://git-scm.com/download/win)，提供一个脚本运行环境。
 
 2. 下载本仓库中的脚本 [aliddns.sh](https://gitee.com/tyasky/aliddns6/releases)。
 
 3. 用 [Notepad++](https://notepad-plus-plus.org/downloads/) 修改脚本开始的以下参数
 
-    ```
+    ```bash
     ak="Access Key ID"
     sk="Access Key Secret"
     host="test"
