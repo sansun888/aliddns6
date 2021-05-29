@@ -89,7 +89,50 @@
 
 4. 双击运行
 
-## 5. 其他
+## 5. 命令行运行
+
+1. 指定配置文件运行
+
+    有配置文件 conf.txt，内容如下（其实就是将 aliddns.sh 中的配置内容复制到新的文件）：
+
+    ```bash
+    ak="Access Key ID"
+    sk="Access Key Secret"
+    host="test"
+    domain="example.com"
+    rungap=300             # 更新间隔秒数
+    
+    dns="dns9.hichina.com"
+    type=AAAA              # 解析记录类型
+    downvalue=""           # 解析值，留空则动态获取
+    get_downvalue() {
+        # ip -6 address | grep dynamic | tail -1 | awk '{print $2}' | awk -F '/' '{print $1}'
+        # Windows7 中获取本机 IPv6 地址
+        ipconfig|iconv -f gbk -t UTF-8|grep '临时 IPv6'|awk '{print $NF}'
+    }
+    ```
+
+    可这样运行：
+
+    ```bash
+    ./aliddns.sh -f conf.txt
+    ```
+
+2. 删除解析记录
+
+    主域名是 xx.com，删除 test.xx.com 的解析记录：
+
+    ```bash
+    ./aliddns.sh -f conf.txt -d test
+    ```
+
+3. 后台运行
+
+    ```bash
+    nohup ./aliddns.sh &
+    ```
+
+## 6. 其他
 
 [检查域名解析情况](https://zijian.aliyun.com/)。
 

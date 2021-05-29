@@ -70,6 +70,26 @@ delete_record() {
     send_request "Action=DeleteDomainRecord&RecordId=$(query_recordid)"
 }
 
+usage() {
+    echo "Usage:"
+    echo "-f file1  Read config from file1" 
+    echo "-d test   DeleteDomainRecord of test.xx.com"
+    echo "-h        Show usage"
+    exit
+}
+
+set -- $(getopt -q hd:f: "$@")
+while [ -n "$1" ]
+do
+    case "$1" in
+        -h) usage;;
+        -d) host=${2:1:!2-1};delete_record;exit;;
+        -f) . ${2:1:!2-1};shift;;
+        *);;
+    esac
+    shift
+done
+
 while [ 1 -eq 1 ]
 do
     datetime=$(date +%Y-%m-%d\ %T)
