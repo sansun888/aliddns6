@@ -81,9 +81,9 @@
     type=AAAA              # 解析记录类型
     downvalue=""           # 解析值，留空则动态获取
     get_downvalue() {
-        # ip -6 address | grep dynamic | tail -1 | awk '{print $2}' | awk -F '/' '{print $1}'
+        # ((ip -6 addr|grep temporary)||(ip -6 addr|grep dynamic)|tail -1)|awk '{print $2}'|awk -F/ '{print $1}'
         # Windows7 中获取本机 IPv6 地址
-        ipconfig|iconv -f gbk -t UTF-8|grep '临时 IPv6'|awk '{print $NF}'
+        ipconfig|iconv -f gbk -t UTF-8|grep '临时 IPv6'|tail -1|awk '{print $NF}'
     }
     ```
 
@@ -106,9 +106,9 @@
     type=AAAA              # 解析记录类型
     downvalue=""           # 解析值，留空则动态获取
     get_downvalue() {
-        # ip -6 address | grep dynamic | tail -1 | awk '{print $2}' | awk -F '/' '{print $1}'
+        ((ip -6 addr|grep temporary)||(ip -6 addr|grep dynamic)|tail -1)|awk '{print $2}'|awk -F/ '{print $1}'
         # Windows7 中获取本机 IPv6 地址
-        ipconfig|iconv -f gbk -t UTF-8|grep '临时 IPv6'|awk '{print $NF}'
+        # ipconfig|iconv -f gbk -t UTF-8|grep '临时 IPv6'|tail -1|awk '{print $NF}'
     }
     ```
 
