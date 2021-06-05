@@ -6,17 +6,24 @@ ak="Access Key ID"
 sk="Access Key Secret"
 host="test"
 domain="example.com"
-rungap=300             # 更新间隔秒数
 
-dns="dns9.hichina.com"
+rungap=300             # 更新间隔秒数
 type=AAAA              # 解析记录类型
 downvalue=""           # 解析值，留空则动态获取
-get_downvalue() {
-    ((ip -6 addr|grep temporary)||(ip -6 addr|grep dynamic)|tail -1)|awk '{print $2}'|awk -F/ '{print $1}'
-    # Windows7 中获取本机 IPv6 地址
-    # ipconfig|iconv -f gbk -t UTF-8|grep '临时 IPv6'|tail -1|awk '{print $NF}'
-}
+dns="dns9.hichina.com"
 
+
+# 存在 ip 就用 ip，否则用 ipconfig
+which ip>/dev/null 2>&1
+if [ $? -eq 0 ];then
+    get_downvalue() {
+        ((ip -6 addr|grep temporary)||(ip -6 addr|grep dynamic)|tail -1)|awk '{print $2}'|awk -F/ '{print $1}'
+    }
+else
+    get_downvalue() {
+        ipconfig|iconv -f gbk -t UTF-8|grep '临时 IPv6'|head -1|awk '{print $NF}'
+    }
+fi
 
 # 第二个参数指定额外不编码的字符
 # 笔记：[-_.~a-zA-Z0-9$2] 中的-字符用于表示区间，放到中间会出意外结果

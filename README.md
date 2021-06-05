@@ -1,6 +1,8 @@
 # 支持 IPv6 的 aliddns.sh
 
-为了兼容，只留下一个可独立运行的脚本 aliddns.sh。此脚本已在 Manjaro、RT-AC86U、Termux 中测试过了。
+aliddns.sh，想要做到一个脚本全平台可运行。
+
+已在 Windows7、Manjaro、RT-AC86U、Termux、RPi 4B 中测试通过。
 
 ## 1. 测试是否已接入 IPv6 网络
 
@@ -26,70 +28,61 @@
 
 ![dnsfullaccess](./images/dnsfullaccess.png)
 
-## 3. 路由器中自动运行
+## 3. 下载脚本并配置
 
-下载本仓库中的脚本 [aliddns.sh](https://gitee.com/tyasky/aliddns6/releases)。
+1. 下载本仓库中的脚本 [aliddns.sh](https://gitee.com/tyasky/aliddns6/releases)。
 
-下面的步骤在 Windows 下可以用 [Notepad++](https://notepad-plus-plus.org/downloads/) 和 [WinSCP](https://winscp.net/) 完成。
+2. 修改脚本开始的以下参数
 
-1. 修改脚本开始的以下参数
+    前四行必改，后四行选改。在 Windows 下推荐用 [Notepad++](https://notepad-plus-plus.org/downloads/)  修改，不要用记事本。
 
     ```bash
     ak="Access Key ID"
     sk="Access Key Secret"
     host="test"
     domain="example.com"
-    rungap=300                # 更新解析记录的间隔时间，秒数
+    
+    rungap=300             # 更新间隔秒数
+    type=AAAA              # 解析记录类型
+    downvalue=""           # 解析值，留空则动态获取
+    dns="dns9.hichina.com"
     ```
 
-2. 将本脚本放到 `/jffs/`目录下
+## 4. 路由器中自动运行
+
+下面的步骤在 Windows 下可用 [WinSCP](https://winscp.net/) 完成。
+
+假设路由器中已开启 SSH，端口号为 8022，路由器登录名为 Asus，路由器 IP 为 192.168.50.1。
+
+以下第二步和第三步是 SSH 进路由器中完成的。
+
+1. 将本脚本放到 `/jffs/`目录下
 
     ```bash
-    scp -P8022 ./aliddns.sh RouterLoginName@192.168.50.1:/jffs/
+    scp -P8022 ./aliddns.sh Asus@192.168.50.1:/jffs/
     ```
 
-3. 添加执行权限
+2. 添加执行权限
 
     ```bash
     chmod a+x /jffs/aliddns.sh
     ```
 
-4. 在 `/jffs/scripts/wan-start`末尾添加一行
+3. 在 `/jffs/scripts/wan-start` 末尾添加一行
 
     ```bash
     source /jffs/aliddns.sh
     ```
 
-5. 重启路由器。
+4. 重启路由器。
 
-## 4. Windows7 下运行
+## 5. Windows7 下运行
 
 1. 下载安装 [Git](https://git-scm.com/download/win)，提供一个脚本运行环境。
 
-2. 下载本仓库中的脚本 [aliddns.sh](https://gitee.com/tyasky/aliddns6/releases)。
+2. 双击脚本运行
 
-3. 用 [Notepad++](https://notepad-plus-plus.org/downloads/) 修改脚本开始的以下参数
-
-    ```bash
-    ak="Access Key ID"
-    sk="Access Key Secret"
-    host="test"
-    domain="example.com"
-    rungap=300             # 更新间隔秒数
-    
-    dns="dns9.hichina.com"
-    type=AAAA              # 解析记录类型
-    downvalue=""           # 解析值，留空则动态获取
-    get_downvalue() {
-        # ((ip -6 addr|grep temporary)||(ip -6 addr|grep dynamic)|tail -1)|awk '{print $2}'|awk -F/ '{print $1}'
-        # Windows7 中获取本机 IPv6 地址
-        ipconfig|iconv -f gbk -t UTF-8|grep '临时 IPv6'|tail -1|awk '{print $NF}'
-    }
-    ```
-
-4. 双击运行
-
-## 5. 命令行运行
+## 6. 命令行运行
 
 1. 指定配置文件运行
 
@@ -100,16 +93,11 @@
     sk="Access Key Secret"
     host="test"
     domain="example.com"
+
     rungap=300             # 更新间隔秒数
-    
-    dns="dns9.hichina.com"
     type=AAAA              # 解析记录类型
     downvalue=""           # 解析值，留空则动态获取
-    get_downvalue() {
-        ((ip -6 addr|grep temporary)||(ip -6 addr|grep dynamic)|tail -1)|awk '{print $2}'|awk -F/ '{print $1}'
-        # Windows7 中获取本机 IPv6 地址
-        # ipconfig|iconv -f gbk -t UTF-8|grep '临时 IPv6'|tail -1|awk '{print $NF}'
-    }
+    dns="dns9.hichina.com"
     ```
 
     可这样运行：
