@@ -57,30 +57,33 @@ send_request() {
     echo $(curl -k -s "https://alidns.aliyuncs.com/?$args&Signature=$Signature")
 }
 
-query_recordid() {
-    send_request "Action=DescribeSubDomainRecords&SubDomain=$host.$domain" | sed 's/":/：/g;s/"//g;s/,/\n/g' | grep RecordId | awk -F： '{ print $2 }'
+getValueFromJson() {
+    local json="$1"
+    local key="$2"
+    echo $json | sed 's/":/：/g;s/"//g;s/,/\n/g' | grep $key | awk -F： '{ print $2 }'
 }
 
-query_value() {
-    send_request "Action=DescribeSubDomainRecords&SubDomain=$host.$domain" | sed 's/":/：/g;s/"//g;s/,/\n/g' | grep Value | awk -F： '{ print $2 }'
+DescribeSubDomainRecords() {
+    send_request "Action=DescribeSubDomainRecords&SubDomain=$host.$domain"
 }
 
-update_record() {
-    send_request "Action=UpdateDomainRecord&RR=$host&RecordId=$(query_recordid)&Type=$type&Value=$downvalue"
+UpdateDomainRecord() {
+    local recordid=$(getValueFromJson `DescribeSubDomainRecords` "RecordId")
+    send_request "Action=UpdateDomainRecord&RR=$host&RecordId=$recordid&Type=$type&Value=$downvalue"
 }
 
-add_record() {
+AddDomainRecord() {
     send_request "Action=AddDomainRecord&DomainName=$domain&RR=$host&Type=$type&Value=$downvalue"
 }
 
-delete_record() {
-    send_request "Action=DeleteDomainRecord&RecordId=$(query_recordid)"
+DeleteSubDomainRecords() {
+    send_request "Action=DeleteSubDomainRecords&DomainName=$domain&RR=$host"
 }
 
 usage() {
     echo "Usage:"
     echo "-f file1  Read config from file1" 
-    echo "-d test   DeleteDomainRecord of test.xx.com"
+    echo "-d test   DeleteSubDomainRecords of test.xx.com"
     echo "-h        Show usage"
     exit
 }
@@ -90,7 +93,7 @@ while [ -n "$1" ]
 do
     case "$1" in
         -h) usage;;
-        -d) host=${2:1:!2-1};delete_record;exit;;
+        -d) host=${2:1:!2-1};DeleteSubDomainRecords;exit;;
         -f) . ${2:1:!2-1};shift;;
         *);;
     esac
@@ -102,26 +105,31 @@ do
     datetime=$(date +%Y-%m-%d\ %T)
     echo 当前时间：$datetime
 
-    upvalue=`query_value`
+    rslt=`DescribeSubDomainRecords`
+    if [ -z "$rslt" ];then
+        echo "未获取到阿里云查询结果"
+        sleep $rungap
+        continue
+    fi
+    upvalue=$(getValueFromJson "$rslt" "Value")
     echo 域名指向：$upvalue
 
     downvalue=${downvalue:=`get_downvalue`}
-    echo 本机地址：$downvalue
-
     if [ -z "$downvalue" ]; then
         echo "未获取到本机地址"
         sleep $rungap
         continue
     fi
+    echo 本机地址：$downvalue
 
     if [ "$upvalue" = "$downvalue" ]; then
         echo "已正确解析，无需更新。"
     elif [ -n "$upvalue" ]; then
         echo "更新解析记录..."
-        update_record
+        UpdateDomainRecord
     else
         echo "添加解析记录..."
-        add_record
+        AddDomainRecord
     fi
     sleep $rungap
 done
