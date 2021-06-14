@@ -53,7 +53,7 @@ send_request() {
     args=`echo $args | sed 's/\&/\n/g' | LC_ALL=c sort | xargs | sed 's/ /\&/g'`
     CanonicalizedQueryString=$(urlencode $args "=&")
     StringToSign="GET&%2F&$(urlencode $CanonicalizedQueryString)"
-    Signature=$(urlencode $(echo -n "$StringToSign" | openssl dgst -sha1 -hmac "$sk&" -binary | base64))
+    Signature=$(urlencode $(echo -n "$StringToSign" | openssl dgst -sha1 -hmac "$sk&" -binary | openssl base64))
     echo $(curl -k -s "https://alidns.aliyuncs.com/?$args&Signature=$Signature")
 }
 
