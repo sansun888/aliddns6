@@ -125,3 +125,5 @@ aliddns.sh，想要做到一个脚本全平台可运行。
 [检查域名解析情况](https://zijian.aliyun.com/)。
 
 [阿里云云解析 DNS API 文档](https://help.aliyun.com/document_detail/29740.html)。
+
+交流反馈扣扣群：585194793
