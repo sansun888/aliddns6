@@ -68,10 +68,10 @@ aliddns.sh，想要做到一个脚本全平台可运行。
     chmod a+x /jffs/aliddns.sh
     ```
 
-3. 在 `/jffs/scripts/wan-start` 末尾添加一行
+3. 在 `/jffs/scripts/services-start` 末尾添加一行
 
     ```bash
-    source /jffs/aliddns.sh
+    source /jffs/aliddns.sh &
     ```
 
 4. 重启路由器。
