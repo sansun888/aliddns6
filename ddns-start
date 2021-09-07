@@ -7,7 +7,7 @@ sk="Access Key Secret"
 host="test"
 domain="example.com"
 
-rungap=300             # 更新间隔秒数
+rungap=60              # 更新间隔秒数
 type=AAAA              # 解析记录类型
 downvalue=""           # 解析值，留空则动态获取
 dns="dns9.hichina.com"
@@ -131,5 +131,7 @@ do
         echo "添加解析记录..."
         AddDomainRecord
     fi
-    sleep $rungap
+    break
 done
+
+/sbin/ddns_custom_updated 1
