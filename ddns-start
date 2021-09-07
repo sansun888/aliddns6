@@ -12,21 +12,18 @@ type=AAAA              # 解析记录类型
 downvalue=""           # 解析值，留空则动态获取
 dns="dns9.hichina.com"
 
-
-# 存在 ip 就用 ip，否则用 ipconfig
-which ip>/dev/null 2>&1
-if [ $? -eq 0 ];then
+# 根据type选择获取ip的函数
+if [ "$type" = "AAAA" ];then
     get_downvalue() {
-        ((ip -6 addr|grep temporary)||(ip -6 addr|grep dynamic)|tail -1)|awk '{print $2}'|awk -F/ '{print $1}'
+        LANG=c ifconfig ppp0 | grep "Global" | head -1 | awk '{print $3}' | awk -F/ '{print $1}'
     }
 else
     get_downvalue() {
-        ipconfig|iconv -f gbk -t UTF-8|grep '临时 IPv6'|head -1|awk '{print $NF}'
+        LANG=c ifconfig ppp0 | grep "inet addr" | awk -F: '{print $2}' | awk '{print $1}'
     }
 fi
 
 # 第二个参数指定额外不编码的字符
-# 笔记：[-_.~a-zA-Z0-9$2] 中的-字符用于表示区间，放到中间会出意外结果
 urlencode() {
     local string="${1}"
     local strlen=${#string}
@@ -46,10 +43,8 @@ urlencode() {
 
 send_request() {
     timestamp=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
-    # 服务器拒绝重放攻击（本次与前一次请求数据相同返回错误)，SignatureNonce 需赋值随机数而不能是时间戳(可能同一秒两次请求)
     nonce=`openssl rand -base64 8 | md5sum | cut -c1-8`
     args="AccessKeyId=$ak&Format=json&SignatureMethod=HMAC-SHA1&SignatureNonce=$nonce&SignatureVersion=1.0&Timestamp=$timestamp&Version=2015-01-09&$1"
-    # 签名要求参数按大小写敏感排序(sort 在本地语言环境可能会忽略大小写排序)：LC_ALL=c sort
     args=`echo $args | sed 's/\&/\n/g' | LC_ALL=c sort | xargs | sed 's/ /\&/g'`
     CanonicalizedQueryString=$(urlencode $args "=&")
     StringToSign="GET&%2F&$(urlencode $CanonicalizedQueryString)"
@@ -79,26 +74,6 @@ AddDomainRecord() {
 DeleteSubDomainRecords() {
     send_request "Action=DeleteSubDomainRecords&DomainName=$domain&RR=$host"
 }
-
-usage() {
-    echo "Usage:"
-    echo "-f file1  Read config from file1" 
-    echo "-d test   DeleteSubDomainRecords of test.xx.com"
-    echo "-h        Show usage"
-    exit
-}
-
-set -- $(getopt -q hd:f: "$@")
-while [ -n "$1" ]
-do
-    case "$1" in
-        -h) usage;;
-        -d) host=${2:1:!2-1};DeleteSubDomainRecords;exit;;
-        -f) . ${2:1:!2-1};shift;;
-        *);;
-    esac
-    shift
-done
 
 while [ 1 -eq 1 ]
 do
