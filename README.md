@@ -30,51 +30,50 @@ aliddns.sh，想要做到一个脚本全平台可运行。
 
 ## 3. 下载脚本并配置
 
-1. 下载本仓库中的脚本 [aliddns.sh](https://gitee.com/tyasky/aliddns6/releases)。
+1. 要放到路由器中运行，下载 [ddns-start](https://gitee.com/tyasky/aliddns6/releases)。其他平台下用，下载 [aliddns.sh](https://gitee.com/tyasky/aliddns6/releases)。
 
 2. 修改脚本开始的以下参数
 
     前四行必改，后四行选改。在 Windows 下推荐用 [Notepad++](https://notepad-plus-plus.org/downloads/)  修改，不要用记事本。
 
     ```bash
-    ak="Access Key ID"
-    sk="Access Key Secret"
-    host="test"
-    domain="example.com"
+    ak="AccessKey ID"             # 阿里云 RAM 访问控制中创建用户时生成的
+    sk="AccessKey Secret"         # 同上
+    host="ddns"                   # 字母数字构成的任意字符串
+    domain="example.com"          # 你的域名
     
-    rungap=300             # 更新间隔秒数
-    type=AAAA              # 解析记录类型
-    downvalue=""           # 解析值，留空则动态获取
-    dns="dns9.hichina.com"
+    runnum=3                      # 最多尝试更新次数
+    rungap=60                     # 尝试间隔秒数
+    type=AAAA                     # 解析记录类型
+    downvalue=""                  # 解析值，留空则动态获取
+    dns="dns9.hichina.com"        # 阿里云DNS服务器
     ```
 
 ## 4. 路由器中自动运行
 
-下面的步骤在 Windows 下可用 [WinSCP](https://winscp.net/) 完成。
+下面的步骤在 Windows 下可用 [Git](https://git-scm.com/download/win) 的 bash 完成（安装完Git，在脚本所在目录中右键选择 Bash）。
 
 假设路由器中已开启 SSH，端口号为 8022，路由器登录名为 Asus，路由器 IP 为 192.168.50.1。
 
-以下第二步和第三步是 SSH 进路由器中完成的。
-
-1. 将本脚本放到 `/jffs/`目录下
+1. 在脚本所在目录，上传脚本：
 
     ```bash
-    scp -P8022 ./aliddns.sh Asus@192.168.50.1:/jffs/
+    scp -P8022 ./ddns-start Asus@192.168.50.1:/jffs/scripts/
     ```
 
-2. 添加执行权限
+2. ssh 进路由器，为脚本添加执行权限：
 
     ```bash
-    chmod a+x /jffs/aliddns.sh
+    chmod a+x /jffs/scripts/ddns-start
     ```
 
-3. 在 `/jffs/scripts/services-start` 末尾添加一行
+3. ssh 进路由器，手动执行脚本，看运行是否正常：
 
     ```bash
-    /jffs/aliddns.sh &
+    /jffs/scripts/ddns-start
     ```
 
-4. 重启路由器。
+4. 上一步正常则设置完毕，不正常可加扣扣群交流。
 
 ## 5. Windows7 下运行
 
@@ -93,19 +92,14 @@ aliddns.sh，想要做到一个脚本全平台可运行。
     sk="Access Key Secret"
     host="test"
     domain="example.com"
-
-    rungap=300             # 更新间隔秒数
-    type=AAAA              # 解析记录类型
-    downvalue=""           # 解析值，留空则动态获取
-    dns="dns9.hichina.com"
-    ```
-
+```
+    
     可这样运行：
-
+    
     ```bash
     ./aliddns.sh -f conf.txt
-    ```
-
+```
+    
 2. 删除解析记录
 
     主域名是 xx.com，删除 test.xx.com 的解析记录：
@@ -120,7 +114,7 @@ aliddns.sh，想要做到一个脚本全平台可运行。
     nohup ./aliddns.sh &
     ```
 
-## 6. 其他
+## 7. 其他
 
 [检查域名解析情况](https://zijian.aliyun.com/)。
 
