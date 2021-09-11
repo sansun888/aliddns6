@@ -92,13 +92,13 @@ aliddns.sh，想要做到一个脚本全平台可运行。
     sk="Access Key Secret"
     host="test"
     domain="example.com"
-```
+    ```
     
     可这样运行：
     
     ```bash
     ./aliddns.sh -f conf.txt
-```
+    ```
     
 2. 删除解析记录
 
