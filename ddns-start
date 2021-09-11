@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # Author: tyasky
 
@@ -7,7 +7,8 @@ sk="Access Key Secret"
 host="test"
 domain="example.com"
 
-rungap=60              # 更新间隔秒数
+runnum=3               # 最多尝试更新次数
+rungap=60              # 尝试间隔秒数
 type=AAAA              # 解析记录类型
 downvalue=""           # 解析值，留空则动态获取
 dns="dns9.hichina.com"
@@ -75,8 +76,9 @@ DeleteSubDomainRecords() {
     send_request "Action=DeleteSubDomainRecords&DomainName=$domain&RR=$host"
 }
 
-while [ 1 -eq 1 ]
+while [ $runnum -gt 0 ]
 do
+    runnum=$[ $runnum - 1 ]
     datetime=$(date +%Y-%m-%d\ %T)
     echo 当前时间：$datetime
 

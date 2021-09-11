@@ -7,7 +7,8 @@ sk="Access Key Secret"
 host="test"
 domain="example.com"
 
-rungap=300             # 更新间隔秒数
+runnum=3               # 最多尝试更新次数
+rungap=60              # 尝试间隔秒数
 type=AAAA              # 解析记录类型
 downvalue=""           # 解析值，留空则动态获取
 dns="dns9.hichina.com"
@@ -100,8 +101,9 @@ do
     shift
 done
 
-while [ 1 -eq 1 ]
+while [ $runnum -gt 0 ]
 do
+    runnum=$[ $runnum - 1 ]
     datetime=$(date +%Y-%m-%d\ %T)
     echo 当前时间：$datetime
 
@@ -131,5 +133,5 @@ do
         echo "添加解析记录..."
         AddDomainRecord
     fi
-    sleep $rungap
+    break
 done
