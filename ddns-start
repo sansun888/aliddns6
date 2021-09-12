@@ -16,11 +16,11 @@ dns="dns9.hichina.com"
 # 根据type选择获取ip的函数
 if [ "$type" = "AAAA" ];then
     get_downvalue() {
-        LANG=c ifconfig ppp0 | grep "Global" | head -1 | awk '{print $3}' | awk -F/ '{print $1}'
+        (ifconfig ppp0||ifconfig br0) 2>/dev/null | grep "Global" | head -1 | awk '{print $3}' | awk -F/ '{print $1}'
     }
 else
     get_downvalue() {
-        LANG=c ifconfig ppp0 | grep "inet addr" | awk -F: '{print $2}' | awk '{print $1}'
+        (ifconfig ppp0||ifconfig br0) 2>/dev/null | grep "inet addr" | awk -F: '{print $2}' | awk '{print $1}'
     }
 fi
 
