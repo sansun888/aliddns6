@@ -103,7 +103,7 @@ done
 
 while [ $runnum -gt 0 ]
 do
-    runnum=$[ $runnum - 1 ]
+    runnum=$(expr $runnum - 1)
     datetime=$(date +%Y-%m-%d\ %T)
     echo 当前时间：$datetime
 
