@@ -7,7 +7,7 @@ sk="Access Key Secret"
 host="test"
 domain="example.com"
 
-runnum=3               # 最多尝试更新次数
+runnum=10              # 最多尝试更新次数
 rungap=60              # 尝试间隔秒数
 type=AAAA              # 解析记录类型
 downvalue=""           # 解析值，留空则动态获取
@@ -82,7 +82,7 @@ do
     datetime=$(date +%Y-%m-%d\ %T)
     echo 当前时间：$datetime
 
-    rslt=`DescribeSubDomainRecords`
+    rslt=`DescribeSubDomainRecords | grep TotalCount`
     if [ -z "$rslt" ];then
         echo "未获取到阿里云查询结果"
         sleep $rungap
