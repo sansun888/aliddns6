@@ -34,7 +34,7 @@ aliddns.sh，想要做到一个脚本全平台可运行。
 
 2. 修改脚本开始的以下参数
 
-    前四行必改，后四行选改。在 Windows 下推荐用 [Notepad++](https://notepad-plus-plus.org/downloads/)  修改，不要用记事本。
+    前四行必改，后四行选改。在 Windows 下推荐用 [EditPlus](https://editplus.com/)  修改，不要用记事本。
 
     ```bash
     ak="AccessKey ID"             # 阿里云 RAM 访问控制中创建用户时生成的
@@ -120,6 +120,6 @@ aliddns.sh，想要做到一个脚本全平台可运行。
 
 [检查域名解析情况](https://zijian.aliyun.com/)。
 
-[阿里云云解析 DNS API 文档](https://help.aliyun.com/document_detail/29740.html)。
+[阿里云云解析 DNS API 文档](https://help.aliyun.com/document_detail/29738.html)。
 
 交流反馈扣扣群：585194793
