@@ -42,11 +42,10 @@ aliddns.sh，想要做到一个脚本全平台可运行。
     host="ddns"                   # 字母数字构成的任意字符串
     domain="example.com"          # 你的域名
     
-    runnum=3                      # 最多尝试更新次数
+    runnum=10                     # 最多尝试更新次数
     rungap=60                     # 尝试间隔秒数
     type=AAAA                     # 解析记录类型
     downvalue=""                  # 解析值，留空则动态获取
-    dns="dns9.hichina.com"        # 阿里云DNS服务器
     ```
 
 ## 4. 路由器中自动运行

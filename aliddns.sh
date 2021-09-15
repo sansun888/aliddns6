@@ -11,7 +11,6 @@ runnum=10              # 最多尝试更新次数
 rungap=60              # 尝试间隔秒数
 type=AAAA              # 解析记录类型
 downvalue=""           # 解析值，留空则动态获取
-dns="dns9.hichina.com"
 
 
 # 存在 ip 就用 ip，否则用 ipconfig
