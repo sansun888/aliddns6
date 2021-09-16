@@ -17,11 +17,11 @@ downvalue=""           # 解析值，留空则动态获取
 which ip>/dev/null 2>&1
 if [ $? -eq 0 ];then
     get_downvalue() {
-        ((ip -6 addr|grep temporary)||(ip -6 addr|grep dynamic)|tail -1)|awk '{print $2}'|awk -F/ '{print $1}'
+        ip -6 addr|grep global|head -1|awk '{print $2}'|awk -F/ '{print $1}'
     }
 else
     get_downvalue() {
-        ipconfig|iconv -f gbk -t UTF-8|grep '临时 IPv6'|head -1|awk '{print $NF}'
+        ipconfig|iconv -f gbk -t UTF-8|grep IPv6|head -1|awk '{print $NF}'
     }
 fi
 
