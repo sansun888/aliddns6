@@ -13,15 +13,14 @@ type=AAAA              # 解析记录类型
 downvalue=""           # 解析值，留空则动态获取
 
 
-# 存在 ip 就用 ip，否则用 ipconfig
-which ip>/dev/null 2>&1
-if [ $? -eq 0 ];then
+# 根据type选择获取ip的函数
+if [ "$type" = "AAAA" ];then
     get_downvalue() {
-        ip -6 addr|grep global|head -1|awk '{print $2}'|awk -F/ '{print $1}'
+        (ip -6 addr|grep global||ipconfig|iconv -f gbk -t UTF-8|grep IPv6) 2>/dev/null|head -1|awk -F/ '{print $1}'|awk '{print $NF}'
     }
 else
     get_downvalue() {
-        ipconfig|iconv -f gbk -t UTF-8|grep IPv6|head -1|awk '{print $NF}'
+        (ip -4 addr|grep global||ipconfig|iconv -f gbk -t UTF-8|grep IPv4) 2>/dev/null|head -1|awk -F/ '{print $1}'|awk '{print $NF}'
     }
 fi
 

@@ -1,8 +1,6 @@
-Dim Fso, Ws, ext, shpg, cwd, fp, cmd, rungap
+Dim Fso, Ws, ext, shpg, cwd, fp, cmdstr, rungap
 
 ' Author: tyasky
-
-rungap = 30      ' 周期运行间隔分钟数
 
 Set Fso = CreateObject("Scripting.FileSystemObject")
 Set Ws = WScript.CreateObject("Wscript.Shell")
@@ -14,8 +12,9 @@ shpg = Fso.GetFile(shpg).ShortPath
 cwd = Fso.GetParentFolderName(WScript.ScriptFullName)
 fp = Fso.BuildPath(cwd, "aliddns.sh")
 fp = Fso.GetFile(fp).ShortPath
-cmd = shpg & " --hide " & fp
-Ws.Run "cmd /c schtasks /create /sc minute /mo " & rungap & " /tn ""aliddns"" /tr """ & cmd & """", 0
+
+cmdstr = shpg & " --hide " & fp
+Ws.Run "cmd /c SCHTASKS /Create /TN aliddns /SC ONEVENT /EC Microsoft-Windows-Dhcpv6-Client/Admin /MO ""*[System[EventID=1006]] and *[EventData[Data[@Name='Flag1']='false' and Data[@Name='Flag2']='true']]"" /TR  """ & cmdstr & """", 0
 
 MsgBox "脚本运行完毕。",, "^_^"
 WScript.Quit(0)
