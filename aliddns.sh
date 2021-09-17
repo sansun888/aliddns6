@@ -13,17 +13,6 @@ type=AAAA              # 解析记录类型
 downvalue=""           # 解析值，留空则动态获取
 
 
-# 根据type选择获取ip的函数
-if [ "$type" = "AAAA" ];then
-    get_downvalue() {
-        (ip -6 addr|grep global||ipconfig|iconv -f gbk -t UTF-8|grep IPv6) 2>/dev/null|head -1|awk -F/ '{print $1}'|awk '{print $NF}'
-    }
-else
-    get_downvalue() {
-        (ip -4 addr|grep global||ipconfig|iconv -f gbk -t UTF-8|grep IPv4) 2>/dev/null|head -1|awk -F/ '{print $1}'|awk '{print $NF}'
-    }
-fi
-
 # 第二个参数指定额外不编码的字符
 # 笔记：[-_.~a-zA-Z0-9$2] 中的-字符用于表示区间，放到中间会出意外结果
 urlencode() {
@@ -98,6 +87,17 @@ do
     esac
     shift
 done
+
+# 根据type选择获取ip的函数
+if [ "$type" = "AAAA" ];then
+    get_downvalue() {
+        (ip -6 addr|grep global||ipconfig|iconv -f gbk -t UTF-8|grep IPv6) 2>/dev/null|head -1|awk -F/ '{print $1}'|awk '{print $NF}'
+    }
+else
+    get_downvalue() {
+        (ip -4 addr|grep global||ipconfig|iconv -f gbk -t UTF-8|grep IPv4) 2>/dev/null|head -1|awk -F/ '{print $1}'|awk '{print $NF}'
+    }
+fi
 
 while [ $runnum -gt 0 ]
 do
