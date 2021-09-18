@@ -76,13 +76,34 @@ aliddns.sh，想要做到一个脚本全平台可运行。
 
 4. 路由器管理页面中，外部网络 ➡️ DDNS ➡️ 启用 DDNS 客户端，服务器选择 Custom，主机名称填入脚本配置中的 host 和 domain 构成的子域名，即 ddns.你的域名，应用本页面设置。
 
-## 5. Windows7 下运行
+## 5. Windows7 中自动运行
 
 1. 下载安装 [Git](https://git-scm.com/download/win)，提供一个脚本运行环境。
+2. 双击脚本 createSchTask.vbs，创建计划任务，会在每次连上 IPv6 网络时执行。
 
-2. 双击脚本运行
+## 6. Linux 中自动运行
 
-## 6. 命令行运行
+1. 赋予脚本执行权限
+
+    ```bash
+    chmod a+x ./aliddns.sh
+    ```
+
+2. 创建定时任务
+
+    ```bash
+    crontab -e
+    ```
+
+    最后边添加如下内容：
+
+    ```
+    */5 * * * * /path/to/aliddns.sh
+    ```
+
+    **/path/to/aliddns.sh** 为脚本的绝对路径。如上是每 5 分钟执行一次。
+
+## 7. 命令行运行
 
 1. 指定配置文件运行
 
@@ -115,7 +136,7 @@ aliddns.sh，想要做到一个脚本全平台可运行。
     nohup ./aliddns.sh &
     ```
 
-## 7. 其他
+## 8. 其他
 
 [检查域名解析情况](https://zijian.aliyun.com/)。
 
