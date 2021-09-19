@@ -14,7 +14,12 @@ fp = Fso.BuildPath(cwd, "aliddns.sh")
 fp = Fso.GetFile(fp).ShortPath
 
 cmdstr = shpg & " --hide " & fp
-Ws.Run "cmd /c SCHTASKS /Create /TN aliddns /SC ONEVENT /EC Microsoft-Windows-Dhcpv6-Client/Admin /MO ""*[System[EventID=1006]] and *[EventData[Data[@Name='Flag1']='false' and Data[@Name='Flag2']='true']]"" /TR  """ & cmdstr & """", 0
+
+' 启用事件日志
+Ws.Run "cmd /c wevtutil sl Microsoft-Windows-Dhcpv6-Client/Operational /e:true", 0
+
+' 创建 51031 事件触发的计划任务
+Ws.Run "cmd /c SCHTASKS /Create /TN aliddns /SC ONEVENT /EC Microsoft-Windows-Dhcpv6-Client/Operational /MO ""*[System[EventID=51031]]"" /TR  """ & cmdstr & """", 0
 
 MsgBox "脚本运行完毕。",, "^_^"
 WScript.Quit(0)

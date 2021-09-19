@@ -38,8 +38,8 @@ urlencode() {
             * ) o=`printf '%%%02X' "'$c"`
         esac
         encoded="$encoded$o"
-     done
-     echo "${encoded}"
+    done
+    echo "${encoded}"
 }
 
 send_request() {
