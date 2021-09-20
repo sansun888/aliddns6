@@ -30,9 +30,11 @@ aliddns.sh，想要做到一个脚本全平台可运行。
 
 ## 3. 下载脚本并配置
 
-1. 要放到路由器中运行，下载 [ddns-start](https://gitee.com/tyasky/aliddns6/releases)。其他平台下用，下载 [aliddns.sh](https://gitee.com/tyasky/aliddns6/releases)。
+1. 下载 [Source code (zip)](https://gitee.com/tyasky/aliddns6/releases)。
 
-2. 修改脚本开始的以下参数
+2. 配置
+
+    路由器用 ddns-start，其他平台用 aliddns.sh。
 
     前四行必改，后四行选改。在 Windows 下推荐用 [EditPlus](https://editplus.com/)  修改，不要用记事本。
 
