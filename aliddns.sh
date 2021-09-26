@@ -111,9 +111,9 @@ if isCmdExist netsh;then
             exit
         fi
         IFS=$'\n\n'
-        for line in $(netsh interface ipv6 show addresses|iconv -f gbk -t utf-8|grep 临时|sed 's/d/day/g;s/h/hour/g;s/m/min/g;s/s/second/g')
+        for line in $(netsh interface ipv6 show addresses|iconv -f gbk -t utf-8|grep 临时)
         {
-                x=$(echo $line|awk '{print $3}')
+                x=$(echo $line|awk '{print $3}'|sed 's/d/day/g;s/h/hour/g;s/m/min/g;s/s/second/g')
                 curs=`date -d"1970-01-01 00:00:00 UTC $x" "+%s"` 
                 if [ $curs -gt $maxs ];then
                     maxs=$curs
