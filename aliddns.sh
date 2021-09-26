@@ -68,6 +68,14 @@ DeleteSubDomainRecords() {
     send_request "Action=DeleteSubDomainRecords&DomainName=$domain&RR=$host"
 }
 
+isCmdExist() {
+    local ret=1
+    if type $1 >/dev/null 2>&1;then
+        ret=0
+    fi
+    return $ret
+}
+
 usage() {
     echo "Usage:"
     echo "-f file1  Read config from file1" 
@@ -88,14 +96,35 @@ do
     shift
 done
 
-# 根据type选择获取ip的函数
 if [ "$type" = "AAAA" ];then
+    iq=6
+elif [ "$type" = "A" ];then
+    iq=4
+fi
+
+if isCmdExist netsh;then
     get_downvalue() {
-        (ip -6 addr|grep global||ipconfig|iconv -f gbk -t UTF-8|grep IPv6) 2>/dev/null|head -1|awk -F/ '{print $1}'|awk '{print $NF}'
+        local maxs=0
+        local curs=0
+        if [ "$type" = "A" ];then
+            ipconfig|iconv -f gbk -t utf-8|grep IPv4|awk '{print $NF}'
+            exit
+        fi
+        IFS=$'\n\n'
+        for line in $(netsh interface ipv6 show addresses|iconv -f gbk -t utf-8|grep 临时|sed 's/d/day/g;s/h/hour/g;s/m/min/g;s/s/second/g')
+        {
+                x=$(echo $line|awk '{print $3}')
+                curs=`date -d"1970-01-01 00:00:00 UTC $x" "+%s"` 
+                if [ $curs -gt $maxs ];then
+                    maxs=$curs
+                    addr=$(echo $line|awk '{print $NF}')
+                fi
+        }
+        echo $addr
     }
-else
+elif isCmdExist ip;then
     get_downvalue() {
-        (ip -4 addr|grep global||ipconfig|iconv -f gbk -t UTF-8|grep IPv4) 2>/dev/null|head -1|awk -F/ '{print $1}'|awk '{print $NF}'
+        ip -$iq addr|grep global|head -1|awk -F/ '{print $1}'|awk '{print $NF}'
     }
 fi
 
