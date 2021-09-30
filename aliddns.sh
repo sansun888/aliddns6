@@ -108,9 +108,9 @@ if isCmdExist netsh;then
         local curs=0
         if [ "$type" = "A" ];then
             ipconfig|iconv -f gbk -t utf-8|grep IPv4|awk '{print $NF}'
-            exit
+            return
         fi
-        IFS=$'\n\n'
+        IFS=$'\n'
         for line in $(netsh interface ipv6 show addresses|iconv -f gbk -t utf-8|grep 临时)
         {
                 x=$(echo $line|awk '{print $3}'|sed 's/d/day/g;s/h/hour/g;s/m/min/g;s/s/second/g')
