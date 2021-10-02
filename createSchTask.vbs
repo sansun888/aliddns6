@@ -2,6 +2,8 @@ Dim Fso, Ws, ext, shpg, cwd, fp, cmdstr, rungap
 
 ' Author: tyasky
 
+rungap = 5      ' 周期运行间隔分钟数
+
 Set Fso = CreateObject("Scripting.FileSystemObject")
 Set Ws = WScript.CreateObject("Wscript.Shell")
 
@@ -15,11 +17,7 @@ fp = Fso.GetFile(fp).ShortPath
 
 cmdstr = shpg & " --hide " & fp
 
-' 启用事件日志
-Ws.Run "cmd /c wevtutil sl Microsoft-Windows-Dhcpv6-Client/Operational /e:true", 0
-
-' 创建 51050 事件触发的计划任务
-Ws.Run "cmd /c SCHTASKS /Create /TN aliddns /SC ONEVENT /EC Microsoft-Windows-Dhcpv6-Client/Operational /MO ""*[System[EventID=51050]]"" /TR  """ & cmdstr & """", 0
+Ws.Run "cmd /c SCHTASKS /Create /TN aliddns /SC MINUTE /MO " & rungap & " /TR  """ & cmdstr & """", 0
 
 MsgBox "脚本运行完毕。",, "^_^"
 WScript.Quit(0)
