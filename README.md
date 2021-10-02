@@ -81,7 +81,7 @@ aliddns.sh，想要做到一个脚本全平台可运行。
 ## 5. Windows7 中自动运行
 
 1. 下载安装 [Git](https://git-scm.com/download/win)，提供一个脚本运行环境。
-2. 双击脚本 createSchTask.vbs，创建计划任务，会在每次连上 IPv6 网络时执行。
+2. 双击脚本 createSchTask.vbs，创建计划任务，默认每 5 分钟执行一次。
 
 ## 6. Linux 中自动运行
 
