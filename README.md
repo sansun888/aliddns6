@@ -6,8 +6,6 @@
 
 ## 1. 测试是否已接入 IPv6 网络
 
-当前设备有公网 IPv4 地址，且不想用 IPv6，可跳过此步。
-
 [IPv6 测试](http://www.test-ipv6.com/)，成功接入 IPv6 网络显示如下：
 
 ![test-ipv6](./images/test-ipv6.png)
