@@ -12,13 +12,13 @@
 
 ![test-ipv6](./images/test-ipv6.png)
 
-如果没接入 IPv6 网络，参考[电信获取ipv6](https://m.ithome.com/html/405571.htm)。
+如果没接入 IPv6 网络，参考[中国电信IPv6地址获取教程](https://m.ithome.com/html/405571.htm)。
 
 ## 2. 准备域名
 
 去阿里云[万网](https://wanwang.aliyun.com/)购买一个域名。需要实名认证，购买域名时要填真实信息。
 
-域名购买成功后，登录阿里云，进入控制台，[RAM 访问控制](https://ram.console.aliyun.com/overview)。用户 ➡️ 创建用户：
+域名购买成功后，登录[阿里云](https://aliyun.com/)，进入控制台，[RAM 访问控制](https://ram.console.aliyun.com/overview)。用户 ➡️ 创建用户：
 
 ![createuser](./images/createuser.png)
 
@@ -45,7 +45,7 @@
     ```bash
     ak="AccessKey ID"             # 阿里云 RAM 访问控制中创建用户时生成的
     sk="AccessKey Secret"         # 同上
-    host="ddns"                   # 字母数字构成的任意字符串
+    host="pc1"                    # 用来描述设备的任意字母数字字符串，最好能看到就知道是哪个设备
     domain="example.com"          # 你的域名
     
     runnum=10                     # 最多尝试更新次数
@@ -80,7 +80,7 @@
 
     正常则自动运行设置完毕，不正常可加扣扣群交流（本页最后）。
 
-4. 路由器管理页面中，外部网络 ➡️ DDNS ➡️ 启用 DDNS 客户端，服务器选择 Custom，主机名称填入脚本配置中的 host 和 domain 构成的子域名，即 ddns.你的域名，应用本页面设置。
+4. 路由器管理页面中，外部网络 ➡️ DDNS ➡️ 启用 DDNS 客户端，服务器选择 Custom，主机名称填入脚本配置中的 host 和 domain 的值构成的子域名，即 host.domain，应用本页面设置。
 
 ## 5. Windows7 中自动运行
 
