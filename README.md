@@ -1,10 +1,12 @@
-# 支持 IPv6 的 aliddns.sh
+# aliddns.sh
 
-aliddns.sh，想要做到一个脚本全平台可运行。
+此脚本将指定的域名和当前设备的公网 IP 地址一起提交给域名解析服务器，使外网设备可以通过域名访问当前设备。
 
-已在 Windows7、Manjaro、RT-AC86U、Termux、RPi 4B 中测试通过。
+脚本同时支持 IPv4 和 IPv6。没有公网 IPv4 地址，运营商已支持 IPv6，以下就以 IPv6 为例。
 
 ## 1. 测试是否已接入 IPv6 网络
+
+当前设备有公网 IPv4 地址，且不想用 IPv6，可跳过此步。
 
 [IPv6 测试](http://www.test-ipv6.com/)，成功接入 IPv6 网络显示如下：
 
@@ -37,6 +39,8 @@ aliddns.sh，想要做到一个脚本全平台可运行。
     路由器用 ddns-start，其他平台用 aliddns.sh。
 
     前四行必改，后四行选改。在 Windows 下推荐用 [EditPlus](https://editplus.com/)  修改，不要用记事本。
+
+    如果当前设备有公网 IPv4 地址，可将配置中的 type 设为 A。
 
     ```bash
     ak="AccessKey ID"             # 阿里云 RAM 访问控制中创建用户时生成的
