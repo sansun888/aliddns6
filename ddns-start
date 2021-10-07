@@ -16,11 +16,11 @@ downvalue=""           # 解析值，留空则动态获取
 # 根据type选择获取ip的函数
 if [ "$type" = "AAAA" ];then
     get_downvalue() {
-        (ifconfig ppp0||ifconfig br0) 2>/dev/null | grep "Global" | head -1 | awk '{print $3}' | awk -F/ '{print $1}'
+        ip -6 addr|grep global|head -1|awk -F/ '{print $1}'|awk '{print $NF}'
     }
 else
     get_downvalue() {
-        (ifconfig ppp0||ifconfig br0) 2>/dev/null | grep "inet addr" | awk -F: '{print $2}' | awk '{print $1}'
+        ip -4 addr|grep global\ ppp|head -1|awk -F/ '{print $1}'|awk '{print $2}'
     }
 fi
 
