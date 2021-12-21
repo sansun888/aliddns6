@@ -124,7 +124,7 @@ if isCmdExist netsh;then
     }
 elif isCmdExist ip;then
     get_downvalue() {
-        ip -$iq addr|grep global|head -1|awk -F/ '{print $1}'|awk '{print $NF}'
+        ip -$iq addr|grep global|grep -v deprecated|head -1|awk -F/ '{print $1}'|awk '{print $NF}'
     }
 fi
 
