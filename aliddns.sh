@@ -119,12 +119,14 @@ fi
 
 if isCmdExist ipconfig;then
     get_downvalue() {
+        local rst addr
         i=0
         while [ $i -lt ${#cmdlist[@]} ]
         do
-            addr=`${cmdlist[i]}`
-            ipconfig | iconv -f gbk -t utf-8 | grep IPv$iq |grep ${addr} >/dev/null 2>&1
+            rst=`${cmdlist[i]}`
+            ipconfig | iconv -f gbk -t utf-8 | grep IPv$iq |grep ${rst} >/dev/null 2>&1
             if [ $? -eq 0 ];then
+                addr=$rst
                 break
             fi
             let i++
@@ -133,12 +135,14 @@ if isCmdExist ipconfig;then
     }
 elif isCmdExist ip;then
     get_downvalue() {
+        local rst addr
         i=0
         while [ $i -lt ${#cmdlist[@]} ]
         do
-            addr=`${cmdlist[i]}`
-            ip -$iq addr | grep ${addr} >/dev/null 2>&1
+            rst=`${cmdlist[i]}`
+            ip -$iq addr | grep ${rst} >/dev/null 2>&1
             if [ $? -eq 0 ];then
+                addr=$rst
                 break
             fi
             let i++
