@@ -12,6 +12,21 @@ rungap=60              # 尝试间隔秒数
 type=AAAA              # 解析记录类型
 downvalue=""           # 解析值，留空则动态获取
 
+cmdlist=(
+    "curl -s l2.io/ip"
+    "curl -s https://echoip.de"
+    "curl -s ifconfig.me"
+    "curl -s ipecho.net/plain"
+    "curl -s -L ident.me #API"
+    "curl -s -L tnx.nl/ip"
+    "curl -s wgetip.com"
+    "curl -s ip.tyk.nu"
+    "curl -s bot.whatismyipaddress.com"
+    "curl -s curlmyip.net"
+    "curl -s api.ipify.org"
+    "curl -s ipv4bot.whatismyipaddress.com"
+    "curl -s ipcalf.com"
+)
 
 # 第二个参数指定额外不编码的字符
 # 笔记：[-_.~a-zA-Z0-9$2] 中的-字符用于表示区间，放到中间会出意外结果
@@ -102,29 +117,33 @@ elif [ "$type" = "A" ];then
     iq=4
 fi
 
-if isCmdExist netsh;then
+if isCmdExist ipconfig;then
     get_downvalue() {
-        local maxs=0
-        local curs=0
-        if [ "$type" = "A" ];then
-            ipconfig|iconv -f gbk -t utf-8|grep IPv4|awk '{print $NF}'
-            return
-        fi
-        IFS=$'\n'
-        for line in $(netsh interface ipv6 show addresses|iconv -f gbk -t utf-8|grep 临时)
-        {
-                x=$(echo $line|awk '{print $3}'|sed 's/d/day/g;s/h/hour/g;s/m/min/g;s/s/second/g')
-                curs=`date -d"1970-01-01 00:00:00 UTC $x" "+%s"` 
-                if [ $curs -gt $maxs ];then
-                    maxs=$curs
-                    addr=$(echo $line|awk '{print $NF}')
-                fi
-        }
-        echo $addr
+        i=0
+        while [ $i -lt ${#cmdlist[@]} ]
+        do
+            addr=`${cmdlist[i]}`
+            ipconfig | iconv -f gbk -t utf-8 | grep IPv$iq |grep ${addr} >/dev/null 2>&1
+            if [ $? -eq 0 ];then
+                break
+            fi
+            let i++
+        done
+        echo ${addr}
     }
 elif isCmdExist ip;then
     get_downvalue() {
-        ip -$iq addr|grep global|grep -v deprecated|head -1|awk -F/ '{print $1}'|awk '{print $NF}'
+        i=0
+        while [ $i -lt ${#cmdlist[@]} ]
+        do
+            addr=`${cmdlist[i]}`
+            ip -$iq addr | grep ${addr} >/dev/null 2>&1
+            if [ $? -eq 0 ];then
+                break
+            fi
+            let i++
+        done
+        echo ${addr}
     }
 fi
 
