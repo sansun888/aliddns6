@@ -13,19 +13,21 @@ type=AAAA              # 解析记录类型
 downvalue=""           # 解析值，留空则动态获取
 
 cmdlist=(
-    "curl -s l2.io/ip"
-    "curl -s https://echoip.de"
-    "curl -s ifconfig.me"
-    "curl -s ipecho.net/plain"
-    "curl -s -L ident.me #API"
-    "curl -s -L tnx.nl/ip"
-    "curl -s wgetip.com"
-    "curl -s ip.tyk.nu"
-    "curl -s bot.whatismyipaddress.com"
-    "curl -s curlmyip.net"
-    "curl -s api.ipify.org"
-    "curl -s ipv4bot.whatismyipaddress.com"
-    "curl -s ipcalf.com"
+    'curl -s l2.io/ip'
+    'curl -s https://echoip.de'
+    'curl -s ifconfig.me'
+    'curl -s ipecho.net/plain'
+    'curl -s -L ident.me #API'
+    'curl -s -L tnx.nl/ip'
+    'curl -s wgetip.com'
+    'curl -s ip.tyk.nu'
+    'curl -s bot.whatismyipaddress.com'
+    'curl -s curlmyip.net'
+    'curl -s api.ipify.org'
+    'curl -s ipv4bot.whatismyipaddress.com'
+    'curl -s ipcalf.com'
+    'ip -4 addr|grep global|head -1|awk -F/ "{print \$1}"|awk "{print \$NF}"'
+    'ip -6 addr|grep global|head -1|awk -F/ "{print \$1}"|awk "{print \$NF}"'
 )
 
 # 第二个参数指定额外不编码的字符
@@ -123,7 +125,7 @@ if isCmdExist ipconfig;then
         i=0
         while [ $i -lt ${#cmdlist[@]} ]
         do
-            rst=`${cmdlist[i]}`
+            rst=$(eval ${cmdlist[i]})
             ipconfig | iconv -f gbk -t utf-8 | grep IPv$iq |grep ${rst} >/dev/null 2>&1
             if [ $? -eq 0 ];then
                 addr=$rst
@@ -139,7 +141,7 @@ elif isCmdExist ip;then
         i=0
         while [ $i -lt ${#cmdlist[@]} ]
         do
-            rst=`${cmdlist[i]}`
+            rst=$(eval ${cmdlist[i]})
             ip -$iq addr | grep ${rst} >/dev/null 2>&1
             if [ $? -eq 0 ];then
                 addr=$rst
