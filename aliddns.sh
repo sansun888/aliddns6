@@ -69,7 +69,7 @@ getValueFromJson() {
 }
 
 DescribeSubDomainRecords() {
-    send_request "Action=DescribeSubDomainRecords&SubDomain=$host.$domain"
+    send_request "Action=DescribeSubDomainRecords&SubDomain=$host.$domain&Type=$type"
 }
 
 UpdateDomainRecord() {
