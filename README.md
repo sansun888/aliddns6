@@ -69,23 +69,23 @@ domain="xx.com"
    D:\aliddns6\aliddns.sh -f D:\kk.txt
    ```
 
-   **命令中的路径都为绝对路径，且路径中都不能有空格。**
+   **命令中的路径都为绝对路径，且路径中都不能有空格**。
 
 2. Linux
 
    创建定时任务
 
-   ```bash
+   ```shell
    crontab -e
    ```
 
    最后边添加如下内容：
 
-   ```
+   ```shell
    */5 * * * * /path/to/aliddns.sh -f /path/to/kk.txt
    ```
 
-   **命令中的路径都为绝对路径。**如上是每 5 分钟执行一次。
+   **命令中的路径都为绝对路径**。如上是每 5 分钟执行一次。
    
 3. 华硕路由器梅林
 
@@ -144,10 +144,11 @@ domain="xx.com"
    ./aliddns.sh -f conf.txt -d test
    ```
 
-## 9. 其他
+## 8. 其他
 
 1. [检查域名解析情况](https://zijian.aliyun.com/)。
 
 2. [阿里云云解析 DNS API 文档](https://help.aliyun.com/document_detail/29738.html)。
 
 3. 交流反馈扣扣群：585194793
+
