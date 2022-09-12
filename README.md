@@ -4,7 +4,7 @@
 
 脚本同时支持 IPv4 和 IPv6。没有公网 IPv4 地址，运营商已支持 IPv6，以下就以 IPv6 为例。
 
-## 1. 测试是否已接入 IPv6 网络
+## 1、测试是否已接入 IPv6 网络
 
 [IPv6 测试](http://www.test-ipv6.com/)，成功接入 IPv6 网络显示如下：
 
@@ -12,7 +12,7 @@
 
 如果没接入 IPv6 网络，参考[中国电信IPv6地址获取教程](https://m.ithome.com/html/405571.htm)。
 
-## 2. 准备域名
+## 2、准备域名
 
 去阿里云[万网](https://wanwang.aliyun.com/)购买一个域名。需要实名认证，购买域名时要填真实信息。
 
@@ -28,122 +28,126 @@
 
 ![dnsfullaccess](./images/dnsfullaccess.png)
 
-## 3. 下载脚本并配置
+## 3、下载脚本
 
-1. 下载 [Source code (zip)](https://gitee.com/tyasky/aliddns6/releases)。
+直接在用脚本的设备运行
 
-2. 配置
+```shell
+git clone https://gitee.com/tyasky/aliddns6
+```
 
-    路由器用 ddns-start，其他平台用 aliddns.sh。
+![2](./images/2.png)
 
-    前四行必改，后四行选改。在 Windows 下推荐用 [EditPlus](https://editplus.com/)  修改，不要用记事本。
+## 4、编写配置
 
-    如果当前设备有公网 IPv4 地址，可将配置中的 type 设为 A。
+编辑一个配置文件 kk.txt
 
-    ```bash
-    ak="AccessKey ID"             # 阿里云 RAM 访问控制中创建用户时生成的
-    sk="AccessKey Secret"         # 同上
-    host="pc1"                    # 用来描述设备的任意字母数字字符串，最好能看到就知道是哪个设备
-    domain="example.com"          # 你的域名
-    
-    runnum=10                     # 最多尝试更新次数
-    rungap=60                     # 尝试间隔秒数
-    type=AAAA                     # 解析记录类型
-    downvalue=""                  # 解析值，留空则动态获取
-    ```
+```shell
+ak="Access Key ID"
+sk="Access Key Secret"
+host="kk"
+domain="xx.com"
+```
 
-## 4. 路由器中自动运行
+![3](./images/3.png)
 
-下面的步骤在 Windows 下可用 [Git](https://git-scm.com/download/win) 的 bash 完成（安装完Git，在脚本所在目录中右键选择 Bash）。
+## 5、手动执行
 
-假设路由器中已开启 SSH，端口号为 8022，路由器登录名为 Asus，路由器 IP 为 192.168.50.1。
+```shell
+./aliddns6/aliddns.sh -f kk.txt
+```
 
-1. 在脚本所在目录，上传脚本：
+![4](./images/4.png)
 
-    ```bash
-    scp -P8022 ./ddns-start Asus@192.168.50.1:/jffs/scripts/
-    ```
+## 6、自动运行
 
-2. ssh 进路由器，为脚本添加执行权限：
+1. Windows
 
-    ```bash
-    chmod a+x /jffs/scripts/ddns-start
-    ```
+   双击运行 createSchTask.vbs，输入执行脚本的命令：
 
-3. ssh 进路由器，手动执行脚本，看运行是否正常：
+   ```shell
+   D:\aliddns6\aliddns.sh -f D:\kk.txt
+   ```
 
-    ```bash
-    /jffs/scripts/ddns-start
-    ```
+   **命令中的路径都为绝对路径，且路径中都不能有空格。**
 
-    正常则自动运行设置完毕，不正常可加扣扣群交流（本页最后）。
+2. Linux
 
-4. 路由器管理页面中，外部网络 ➡️ DDNS ➡️ 启用 DDNS 客户端，服务器选择 Custom，主机名称填入脚本配置中的 host 和 domain 的值构成的子域名，即 host.domain，应用本页面设置。
+   创建定时任务
 
-## 5. Windows7 中自动运行
+   ```bash
+   crontab -e
+   ```
 
-1. 下载安装 [Git](https://git-scm.com/download/win)，提供一个脚本运行环境。
-2. 双击脚本 createSchTask.vbs，创建计划任务，默认每 5 分钟执行一次。
+   最后边添加如下内容：
 
-## 6. Linux 中自动运行
+   ```
+   */5 * * * * /path/to/aliddns.sh -f /path/to/kk.txt
+   ```
 
-1. 赋予脚本执行权限
+   **命令中的路径都为绝对路径。**如上是每 5 分钟执行一次。
+   
+3. 华硕路由器梅林
 
-    ```bash
-    chmod a+x ./aliddns.sh
-    ```
+   1. [安装 Entware](https://github.com/RMerl/asuswrt-merlin.ng/wiki/Entware)，然后安装 bash。
 
-2. 创建定时任务
+   2. 复制 aliddns.sh 到 /jffs/scripts/ 路径下，改名为 ddns-start。
 
-    ```bash
-    crontab -e
-    ```
+      ```shell
+      cp aliddns6/aliddns.sh /jffs/scripts/ddns-start
+      ```
 
-    最后边添加如下内容：
+   3. 打开 ddns-start，配置好以下几行。
 
-    ```
-    */5 * * * * /path/to/aliddns.sh
-    ```
+      ```shell
+      ak="AccessKey ID"        # 阿里云 RAM 访问控制中创建用户时生成的
+      sk="AccessKey Secret"    # 同上
+      host="kk"                # 用来描述设备的任意字母数字字符串
+      domain="xx.com"          # 你的域名
+      ```
 
-    **/path/to/aliddns.sh** 为脚本的绝对路径。如上是每 5 分钟执行一次。
+## 7、问题解决
 
-## 7. 命令行运行
+1. 脚本报错，检查终端
 
-1. 指定配置文件运行
+   用命令 `whereis bash` 或 `echo $0` 确认系统中有没有 bash，没有则安装上。
 
-    有配置文件 conf.txt，内容如下（其实就是将 aliddns.sh 中的配置内容复制到新的文件）：
+   ![1](./images/1.png)
+   
+1. 脚本运行报错，未获取到阿里云查询结果
 
-    ```bash
-    ak="Access Key ID"
-    sk="Access Key Secret"
-    host="test"
-    domain="example.com"
-    ```
-    
-    可这样运行：
-    
-    ```bash
-    ./aliddns.sh -f conf.txt
-    ```
-    
-2. 删除解析记录
+   原因：跨系统传脚本文件会存在换行符不同导致运行报错的问题。
 
-    主域名是 xx.com，删除 test.xx.com 的解析记录：
+   解决：只在运行脚本的地方编辑脚本。
 
-    ```bash
-    ./aliddns.sh -f conf.txt -d test
-    ```
+   ![3hrhh](./images/3hrhh.png)
 
-3. 后台运行
+   ![3hrhhcentosbash](./images/3hrhh-centos-bash.png)
 
-    ```bash
-    nohup ./aliddns.sh &
-    ```
+2. crontab 设置了计划任务，"没有" 自动执行
 
-## 8. 其他
+   原因： [crontab 没有加载 PATH 全部路径](https://blog.csdn.net/fsx2550553488/article/details/81020623)，脚本里的命令找不到。
 
-[检查域名解析情况](https://zijian.aliyun.com/)。
+   解决：在 kk.txt 第一行加上下面这句
 
-[阿里云云解析 DNS API 文档](https://help.aliyun.com/document_detail/29738.html)。
+   ```shell
+   PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+   ```
 
-交流反馈扣扣群：585194793
+   ![crontabPATH](./images/crontab_PATH.png)
+
+3. 手动删除解析记录
+
+   主域名是 xx.com，删除 test.xx.com 的解析记录
+
+   ```shell
+   ./aliddns.sh -f conf.txt -d test
+   ```
+
+## 9. 其他
+
+1. [检查域名解析情况](https://zijian.aliyun.com/)。
+
+2. [阿里云云解析 DNS API 文档](https://help.aliyun.com/document_detail/29738.html)。
+
+3. 交流反馈扣扣群：585194793
