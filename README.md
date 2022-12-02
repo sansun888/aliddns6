@@ -63,14 +63,10 @@ domain="xx.com"
 
 1. Windows
 
-   双击运行 createSchTask.vbs，输入执行脚本的命令：
+   将配置文件拖放到 createSchTask.vbs 上，创建计划任务：
 
-   ```shell
-   D:\aliddns6\aliddns.sh -f D:\kk.txt
-   ```
-
-   **命令中的路径都为绝对路径，且路径中都不能有空格**。
-
+   ![](images/conf2task.gif)
+   
 2. Linux
 
    创建定时任务
@@ -86,7 +82,7 @@ domain="xx.com"
    ```
 
    **命令中的路径都为绝对路径**。如上是每 5 分钟执行一次。
-   
+
 3. 华硕路由器梅林
 
    1. [安装 Entware](https://github.com/RMerl/asuswrt-merlin.ng/wiki/Entware)，然后安装 bash。
