@@ -22,6 +22,7 @@ cwd = Fso.GetParentFolderName(WScript.ScriptFullName)
 fp = Fso.BuildPath(cwd, "aliddns.sh")
 fp = Fso.GetFile(fp).ShortPath
 
+conf = Fso.GetFile(conf).ShortPath
 cmdstr = shpg & " --hide " & fp & " -f " & conf
 
 Ws.Run "cmd /c SCHTASKS /Create /TN aliddns /SC MINUTE /MO " & rungap & " /TR  """ & cmdstr & """", 0
