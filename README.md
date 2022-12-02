@@ -65,7 +65,7 @@ domain="xx.com"
 
    将配置文件拖放到 createSchTask.vbs 上，创建计划任务：
 
-   ![](images/conf2task.gif)
+   ![](./images/conf2task.gif)
    
 2. Linux
 
